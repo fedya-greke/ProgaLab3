@@ -19,6 +19,20 @@ class MemoryTestApp:
         self.create_menu()
         self.create_widgets()
         self.center_window()
+        # Фокус на кнопке начать для запуска по Entr
+        self.start_button.focus_set()
+
+        # Глобальная привязка Enter
+        root.bind('<Return>', self.enter_logic)
+
+    def enter_logic(self, event):
+        """Обработка Enter"""
+        focused_widget = self.root.focus_get()
+        if self.check_button.cget('state') == 'normal' and self.answer_entry.winfo_ismapped():
+            self.check_answer(event)
+        # Иначе если активна кнопка Начать
+        elif self.start_button.cget('state') == 'normal':
+            self.start_round()
 
     def create_menu(self):
         """Меню сверху слева - меню + настройки справка"""
@@ -74,7 +88,6 @@ class MemoryTestApp:
         self.check_button.bind('<Return>', lambda e: self.check_answer())
 
         # Поле для ввода ответа
-        # input_label = ttk.Label(main_frame, text="Введите запомненное число:", font=("Arial", 10))
         self.input_label = ttk.Label(main_frame, text="", font=("Arial", 10))
         self.input_label.grid(row=3, column=0, columnspan=2, pady=(20,5))
 
@@ -111,6 +124,8 @@ class MemoryTestApp:
         self.start_button.config(state="normal")
         self.check_button.config(state="disabled")
         messagebox.showinfo("Новая игра", "Игра сброшена. Начните новый раунд.")
+
+        self.start_button.focus_set()
 
     def start_round(self):
         """Начинает новый раунд"""
@@ -150,7 +165,7 @@ class MemoryTestApp:
     def hide_number(self):
         self.number_display.config(text="???")
 
-    def check_answer(self):
+    def check_answer(self, event=None):
         user_answer = self.answer_entry.get()
         # Обработка исключения
         # Если строка пустая или только пробелы - предупреждение
