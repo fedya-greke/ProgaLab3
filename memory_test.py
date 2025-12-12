@@ -25,6 +25,16 @@ class MemoryTestApp:
         self.create_widgets()
         self.center_window()
 
+        # Дизайн кнопок
+        style = ttk.Style()
+        style.configure("TButton",
+                        font=("Arial", 10, "bold"),
+                        padding=8)
+
+        style.configure("Accent.TButton",
+                        background="#FF6B6B",
+                        foreground="white")
+
         # Фокус на кнопке начать для запуска по Entr
         self.start_button.focus_set()
 
@@ -76,6 +86,8 @@ class MemoryTestApp:
         main_frame = ttk.Frame(self.root, padding="20")
         main_frame.grid(row=0, column=0, sticky="nsew")
 
+        main_frame.config(width=800)
+
         # Информационная панель
         info_frame = ttk.LabelFrame(main_frame, text="Статистика", padding="20")
         info_frame.grid(row=0, column=0, columnspan=2, pady=(0, 20), sticky="we")
@@ -114,21 +126,20 @@ class MemoryTestApp:
         self.result_label = ttk.Label(main_frame, text="", font=("Arial", 14))
         self.result_label.grid(row=5, column=0, columnspan=2)
         # Метка для сложности
-        self.difficulty_label = ttk.Label(info_frame, text=f"Сложность: {self.current_difficulty}")
+        self.difficulty_label = ttk.Label(info_frame, text=f"Сложность: {self.current_difficulty}", width=25)
         self.difficulty_label.grid(row=0, column=2, padx=10)
 
         # Подсказка про Enter
         enter_hint = ttk.Label(main_frame,
-                               text="💡 Используйте Enter для быстрой проверки и начала нового раунда",
-                               font=("Arial", 9),
+                               text="Используйте Enter для быстрой проверки и начала нового раунда",
+                               font=("Arial", 8),
                                foreground="blue")
         enter_hint.grid(row=7, column=0, columnspan=2, pady=(10, 0))
 
         difficulty_hint = ttk.Label(main_frame,
                                     text=self.difficulty_levels[self.current_difficulty]["description"],
                                     font=("Arial", 9),
-                                    foreground="gray",
-                                    wraplength=400)
+                                    foreground="gray")
         difficulty_hint.grid(row=6, column=0, columnspan=2, pady=(5, 0))
         self.difficulty_hint_label = difficulty_hint
 
@@ -173,14 +184,15 @@ class MemoryTestApp:
         self.score = 0
         self.update_stats()
         self.result_label.config(text="Новая игра!")
-        self.answer_entry.config(state="normal")
+        self.answer_entry.config(state="disabled")
         self.answer_entry.delete(0, tk.END)
+        self.answer_entry.grid(row=4, column=0, columnspan=2, pady=(0, 20))
         self.result_label.config(text="")
         self.number_display.config(text="Начнём новую игру!")
-        if self.input_label.winfo_ismapped():  # Если метка видима
-            self.input_label.grid_forget()
+        """if self.input_label.winfo_ismapped():  # Если метка видима
+            self.input_label.grid_remove()
         if self.answer_entry.winfo_ismapped():  # Если поле ввода видимо
-            self.answer_entry.grid_forget()
+            self.answer_entry.grid_remove()"""
         self.start_button.config(state="normal")
         self.check_button.config(state="disabled")
         messagebox.showinfo("Новая игра",
